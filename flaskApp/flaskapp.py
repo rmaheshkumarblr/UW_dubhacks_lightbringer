@@ -28,32 +28,40 @@ def hello():
 
 @app.route("/info")
 def parse_info():
+    from rapidconnect import RapidConnect
+    rapid = RapidConnect('lightbringer', '3dab63eb-4166-4315-81f5-f7c79164d31f');
+    result = rapid.call('MicrosoftComputerVision', 'describeImage', {
+        'image': 'http://ec2-52-41-77-155.us-west-2.compute.amazonaws.com:5000/static/uploads/image.png',
+        'subscriptionKey': 'a04b26d206e2482083db92c60b3b818a',
+        'maxCandidates': ''
+    });
+    return result
 #output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
 
-	image = ClImage(file_obj=open('static/uploads/colorado.png', 'rb'))
-	output = model.predict([image])
-
-	concepts = output['outputs'][0]['data']['concepts']
-
-	threshold = 0
-
-	keywords = []
-
-	for concept in concepts:
-		if concept['value'] > threshold:
-			keywords.append( (concept['name'],concept['value']) )
-
-	keywords.sort(key=lambda tup: tup[1],reverse=True)
-
-	alexa_intput = ''
-
-	for k in keywords:
-		if alexa_intput == '':
-			alexa_intput = alexa_intput + k[0]
-		else:
-			alexa_intput = alexa_intput + ' '+k[0]
-
-	return alexa_intput
+	# image = ClImage(file_obj=open('static/uploads/colorado.png', 'rb'))
+	# output = model.predict([image])
+    #
+	# concepts = output['outputs'][0]['data']['concepts']
+    #
+	# threshold = 0
+    #
+	# keywords = []
+    #
+	# for concept in concepts:
+	# 	if concept['value'] > threshold:
+	# 		keywords.append( (concept['name'],concept['value']) )
+    #
+	# keywords.sort(key=lambda tup: tup[1],reverse=True)
+    #
+	# alexa_intput = ''
+    #
+	# for k in keywords:
+	# 	if alexa_intput == '':
+	# 		alexa_intput = alexa_intput + k[0]
+	# 	else:
+	# 		alexa_intput = alexa_intput + ' '+k[0]
+    #
+	# return alexa_intput
 
 
 @app.route("/uploadimage", methods=['POST'])
