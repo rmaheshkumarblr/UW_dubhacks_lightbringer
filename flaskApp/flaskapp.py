@@ -60,10 +60,10 @@ def parse_info():
     	if alexa_intput == '':
     		alexa_intput = alexa_intput + k[0]
     	else:
-    		alexa_intput = alexa_intput + ' '+k[0]
+    		alexa_intput = alexa_intput + ','+k[0]
 
     # return alexa_intput
-    return result['description']['captions'][0]['text'] + '\nThe image relates to: ' + alexa_intput
+    return result['description']['captions'][0]['text'] + '.\nThe image relates to: ' + alexa_intput
 
 
 @app.route("/uploadimage", methods=['POST'])
