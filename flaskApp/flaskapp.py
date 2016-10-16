@@ -34,8 +34,10 @@ def parse_info():
         'image': 'http://ec2-52-41-77-155.us-west-2.compute.amazonaws.com:5000/static/uploads/image.png',
         'subscriptionKey': 'a04b26d206e2482083db92c60b3b818a',
         'maxCandidates': ''
+
     });
-    return result
+    result = json.loads(result)
+    return result['description']['captions'][0]['text']
 #output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
 
 	# image = ClImage(file_obj=open('static/uploads/colorado.png', 'rb'))
