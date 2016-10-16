@@ -6,6 +6,7 @@ import json
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
 from clarifai.rest import Image as ClImage
+import Algorithmia
 
 
 clientId='vccBzRmSwTHh1xi0L00DITt7JSVpGeskL7CtX1eX';
@@ -102,6 +103,39 @@ def upload_image():
     # return blank
     msg = {}
     return json.dumps(msg)
+
+@app.route('/seattle/health/')
+def health_seattle():
+    i = "http://www.seattletimes.com/health/feed/"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data]
+    return json.dumps({
+        'data': titles
+    })
+
+@app.route('/seattle/nation/')
+def nation_seattle():
+    i = "http://www.seattletimes.com/nation/feed/"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data]
+    return json.dumps({
+        'data': titles
+    })
+
+@app.route('/seattle/sports/')
+def sports_seattle():
+    i = "http://www.seattletimes.com/sports/feed/"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data]
+    return json.dumps({
+        'data': titles
+    })
 
 if __name__ == '__main__':
   # app.run()
