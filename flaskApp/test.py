@@ -1,6 +1,8 @@
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
 import json
+from clarifai.rest import Image as ClImage
+
 
 
 clientId='vccBzRmSwTHh1xi0L00DITt7JSVpGeskL7CtX1eX';
@@ -9,8 +11,10 @@ clarifaiApp = ClarifaiApp(clientId, clientSecret)
 
 # get the general model
 model = clarifaiApp.models.get("general-v1.3")
-output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
+#output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
 
+image = ClImage(file_obj=open('static/uploads/image.png', 'rb'))
+output = model.predict([image])
 
 concepts = output['outputs'][0]['data']['concepts']
 

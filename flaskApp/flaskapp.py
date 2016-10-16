@@ -25,10 +25,13 @@ app = Flask(__name__)
 def hello():
     return "Hello World!"
 
+
 @app.route("/info")
 def parse_info():
-	output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
+#output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
 
+	image = ClImage(file_obj=open('static/uploads/image.png', 'rb'))
+	output = model.predict([image])
 
 	concepts = output['outputs'][0]['data']['concepts']
 
