@@ -43,7 +43,20 @@ var app = {
         });
     },
     gotPicture: function(imageData) {
-        console.log(imageData);
+        $.ajax({
+            type: 'POST',
+            url: 'http://ec2-52-41-77-155.us-west-2.compute.amazonaws.com:5000/uploadimage',
+            data: {
+                imageData: imageData
+            },
+            success: function(d) {
+                console.log(d);
+            },
+            failure: function(err) {
+                console.log(err);
+            },
+            dataType: 'json'
+        });
     }
 };
 
