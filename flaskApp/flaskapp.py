@@ -9,7 +9,6 @@ clarifaiApp = ClarifaiApp(clientId, clientSecret)
 
 # get the general model
 model = clarifaiApp.models.get("general-v1.3")
-model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
 
 app = Flask(__name__)
 
@@ -25,6 +24,35 @@ app = Flask(__name__)
 @app.route("/")
 def hello():
     return "Hello World!"
+
+@app.route("/info")
+def parse_info():
+	output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
+
+
+	concepts = output['outputs'][0]['data']['concepts']
+
+	threshold = 0
+
+	keywords = []
+
+	for concept in concepts:
+		if concept['value'] > threshold:
+			keywords.append( (concept['name'],concept['value']) ) 
+
+	keywords.sort(key=lambda tup: tup[1],reverse=True)
+
+	sorted_kw = []
+
+	for k in keywords:
+		sorted_kw.append(k[0])
+
+	print sorted_kw
+	
+	return "success"	
+
+	
+
 
 
 
