@@ -1,4 +1,16 @@
 from flask import Flask, render_template , jsonify ,request
+from clarifai import rest
+from clarifai.rest import ClarifaiApp
+
+
+clientId='vccBzRmSwTHh1xi0L00DITt7JSVpGeskL7CtX1eX';
+clientSecret='-Ao1JbwyuULVjzGp8i3N9a6EnpezvZIdoThWJ9Wr';
+clarifaiApp = ClarifaiApp(clientId, clientSecret)
+
+# get the general model
+model = clarifaiApp.models.get("general-v1.3")
+model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
+
 app = Flask(__name__)
 
 # app.config['SERVER_NAME'] = 'AMAZONAWS.COM'
