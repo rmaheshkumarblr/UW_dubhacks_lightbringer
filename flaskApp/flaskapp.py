@@ -32,7 +32,7 @@ def parse_info():
     rapid = RapidConnect('lightbringer', '3dab63eb-4166-4315-81f5-f7c79164d31f');
     result = rapid.call('MicrosoftComputerVision', 'describeImage', {
         'image': 'http://ec2-52-41-77-155.us-west-2.compute.amazonaws.com:5000/static/uploads/image.png',
-        'subscriptionKey': 'a04b26d206e2482083db92c60b3b818a',
+        'subscriptionKey': 'a8a3aac78cd349b486c7079322382b93',
         'maxCandidates': ''
 
     });
