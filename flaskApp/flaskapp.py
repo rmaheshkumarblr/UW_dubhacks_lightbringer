@@ -38,33 +38,32 @@ def parse_info():
 
     });
     result = json.loads(result)
-    return result['description']['captions'][0]['text']
-#output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
 
-	# image = ClImage(file_obj=open('static/uploads/colorado.png', 'rb'))
-	# output = model.predict([image])
-    #
-	# concepts = output['outputs'][0]['data']['concepts']
-    #
-	# threshold = 0
-    #
-	# keywords = []
-    #
-	# for concept in concepts:
-	# 	if concept['value'] > threshold:
-	# 		keywords.append( (concept['name'],concept['value']) )
-    #
-	# keywords.sort(key=lambda tup: tup[1],reverse=True)
-    #
-	# alexa_intput = ''
-    #
-	# for k in keywords:
-	# 	if alexa_intput == '':
-	# 		alexa_intput = alexa_intput + k[0]
-	# 	else:
-	# 		alexa_intput = alexa_intput + ' '+k[0]
-    #
-	# return alexa_intput
+    image = ClImage(file_obj=open('static/uploads/colorado.png', 'rb'))
+    output = model.predict([image])
+
+    concepts = output['outputs'][0]['data']['concepts']
+
+    threshold = 0
+
+    keywords = []
+
+    for concept in concepts:
+    	if concept['value'] > threshold:
+    		keywords.append( (concept['name'],concept['value']) )
+
+    keywords.sort(key=lambda tup: tup[1],reverse=True)
+
+    alexa_intput = ''
+
+    for k in keywords[:5]:
+    	if alexa_intput == '':
+    		alexa_intput = alexa_intput + k[0]
+    	else:
+    		alexa_intput = alexa_intput + ' '+k[0]
+
+    # return alexa_intput
+    return result['description']['captions'][0]['text'] + '\nThe image relates to: ' + alexa_intput
 
 
 @app.route("/uploadimage", methods=['POST'])
@@ -88,54 +87,95 @@ def upload_image():
     if os.path.exists(img_rel_path):
         os.path.remove(img_rel_path)
 
-    try:
-        # create a new file with the image as content
-        with open('static/uploads/image.png', 'w+') as image_file:
-            image_file.write(decoded_image)
-    except Exception as e:
-        msg = json.dumps({
-            'message': e
-        })
-        response = Response(msg, status=500, mimetype='application/json')
-        return response
+    # create a new file with the image as content
+    with open('static/uploads/image.png', 'wb') as image_file:
+        image_file.write(decoded_image)
 
     # sure to be free of exceptions
     # return blank
     msg = {}
     return json.dumps(msg)
 
-@app.route('/seattle/health/')
+@app.route('/seattletimes/health/')
 def health_seattle():
     i = "http://www.seattletimes.com/health/feed/"
     client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
     algo = client.algo('tags/ScrapeRSS/0.1.6')
     data = algo.pipe(i).result
-    titles = [x['title'] for x in data]
-    return json.dumps({
-        'data': titles
-    })
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
 
-@app.route('/seattle/nation/')
+@app.route('/seattletimes/nation/')
 def nation_seattle():
     i = "http://www.seattletimes.com/nation/feed/"
     client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
     algo = client.algo('tags/ScrapeRSS/0.1.6')
     data = algo.pipe(i).result
-    titles = [x['title'] for x in data]
-    return json.dumps({
-        'data': titles
-    })
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
 
-@app.route('/seattle/sports/')
+@app.route('/seattletimes/sports/')
 def sports_seattle():
     i = "http://www.seattletimes.com/sports/feed/"
     client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
     algo = client.algo('tags/ScrapeRSS/0.1.6')
     data = algo.pipe(i).result
-    titles = [x['title'] for x in data]
-    return json.dumps({
-        'data': titles
-    })
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
+
+@app.route('/washingtonpost/sports/')
+def sports_washingtonpost():
+    i = "http://feeds.washingtonpost.com/rss/sports"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
+
+@app.route('/washingtonpost/health/')
+def health_washingtonpost():
+    i = "http://feeds.washingtonpost.com/rss/lifestyle"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
+
+@app.route('/washingtonpost/nation/')
+def nation_washingtonpost():
+    i = "http://feeds.washingtonpost.com/rss/national"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
+
+@app.route('/newyorktimes/nation/')
+def nation_newyorktimes():
+    i = "http://rss.nytimes.com/services/xml/rss/nyt/US.xml"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
+
+@app.route('/newyorktimes/sports/')
+def sports_newyorktimes():
+    i = "http://rss.nytimes.com/services/xml/rss/nyt/Sports.xml"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
+
+@app.route('/newyorktimes/health/')
+def health_newyorktimes():
+    i = "http://rss.nytimes.com/services/xml/rss/nyt/Nutrition.xml"
+    client = Algorithmia.client('simStToxxCivLrSSy8CX4/g1uBI1')
+    algo = client.algo('tags/ScrapeRSS/0.1.6')
+    data = algo.pipe(i).result
+    titles = [x['title'] for x in data][:3]
+    return '. '.join(titles)
 
 if __name__ == '__main__':
   # app.run()
