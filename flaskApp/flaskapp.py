@@ -1,6 +1,7 @@
 from flask import Flask, render_template , jsonify ,request
 from clarifai import rest
 from clarifai.rest import ClarifaiApp
+from clarifai.rest import Image as ClImage
 
 
 clientId='vccBzRmSwTHh1xi0L00DITt7JSVpGeskL7CtX1eX';
@@ -30,7 +31,7 @@ def hello():
 def parse_info():
 #output = model.predict_by_url(url='https://samples.clarifai.com/metro-north.jpg')
 
-	image = ClImage(file_obj=open('static/uploads/image.png', 'rb'))
+	image = ClImage(file_obj=open('static/uploads/colorado.png', 'rb'))
 	output = model.predict([image])
 
 	concepts = output['outputs'][0]['data']['concepts']
@@ -45,15 +46,16 @@ def parse_info():
 
 	keywords.sort(key=lambda tup: tup[1],reverse=True)
 
-	sorted_kw = []
+	alexa_intput = ''
 
 	for k in keywords:
-		sorted_kw.append(k[0])
+		if alexa_intput == '':
+			alexa_intput = alexa_intput + k[0]
+		else:
+			alexa_intput = alexa_intput + ' '+k[0]
 
-	print sorted_kw
+	return alexa_intput
 	
-	return "success"	
-
 	
 
 
